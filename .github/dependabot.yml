@@ -1,0 +1,20 @@
+# Keeps the action versions in ci.yml current. Added because checkout@v4 went
+# deprecated and started annotating every run within an hour of CI existing,
+# and the runners silently forced it onto a newer Node rather than failing.
+#
+# Actions only, not cargo. There is one direct dependency, `png`, and the
+# weekly audit and deny stages already cover the security case for the tree
+# below it. A version bump there is one `cargo update` by hand.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    # One PR for all of them. Three actions bumping separately is three CI
+    # runs and three reviews for what is always the same decision.
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: ci

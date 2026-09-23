@@ -1,0 +1,65 @@
+# Stage order: fmt, audit, deny, check, clippy, test.
+# The two security stages run before anything compiles, so a fresh advisory
+# stops the run in seconds rather than after a build.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # The advisory database moves even when this repo does not, so audit and deny
+  # run weekly on their own.
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+# A second push supersedes the first. Nothing here needs the older answer.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      # Prebuilt binaries. Building these two from source takes several minutes
+      # per run, and they are the slowest part of the job by far.
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-audit, cargo-deny
+
+      - name: fmt
+        run: cargo fmt --all -- --check
+
+      - name: audit
+        run: cargo audit
+
+      - name: deny
+        run: cargo deny check
+
+      - name: check
+        run: cargo check --workspace
+
+      - name: clippy
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: test
+        run: cargo test --workspace
+
+      # Renders are gitignored, so nothing above proves the binary can write a
+      # file. One still is about a second and covers argument parsing, the
+      # palette cut and the PNG encoder in one go.
+      - name: bake a still
+        run: cargo run --release -- --theme dusk --still --out /tmp/ci_still.png

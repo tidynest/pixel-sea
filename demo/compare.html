@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>pixel-sea · styles in motion</title>
+<style>
+  :root { --ink: #ffd9bd; --dim: #b79ec4; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: linear-gradient(#1e2878 0%, #7a4896 34%, #e89678 62%, #1e5c84 62%, #0a1c3a 100%);
+    color: var(--ink);
+    font: 15px/1.55 ui-monospace, "JetBrains Mono", Menlo, monospace;
+    padding: 28px clamp(16px, 4vw, 48px) 60px;
+  }
+  h1 { font-size: 20px; margin: 0 0 4px; letter-spacing: .02em; }
+  p.sub { margin: 0 0 22px; color: var(--dim); font-size: 13px; }
+
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  input[type=radio] { position: absolute; opacity: 0; pointer-events: none; }
+  label {
+    cursor: pointer; padding: 7px 14px; border-radius: 999px;
+    border: 1px solid #ffffff33; background: #0a1c3a66;
+    font-size: 13px; user-select: none;
+  }
+  label:hover { background: #0a1c3aaa; }
+  label small { color: var(--dim); }
+
+  /* The stage is a query container so the rules below can ask how wide the
+     render is actually being drawn, rather than deriving it from the viewport
+     and the body padding. This page needs two thresholds rather than one,
+     because `fine` is 640 native and the other three are 320, so each stage
+     carries its own native width as a class. */
+  .stage {
+    container-type: inline-size;
+    border: 1px solid #ffffff2e; border-radius: 10px; overflow: hidden;
+    background: #0a1c3a; box-shadow: 0 18px 50px #0a1c3a99;
+  }
+  .stage img {
+    display: block; width: 100%; height: auto;
+    image-rendering: pixelated;
+  }
+
+  /* Nearest-neighbour is for stretching a render up. Below native the stage is
+     squeezing it down, and nearest-neighbour then discards source pixels
+     rather than averaging them, which beats against the 4px Bayer cell into
+     moire across the sky. Hand those back to the browser's filter. Measured
+     crossovers are a 354px viewport for the 320 styles and a 698px one for
+     `fine`, so `fine` is the case that actually bites. A single threshold
+     cannot serve both: at a 341px stage, which is what a 375px phone gives,
+     the 320 styles are upscaling and want nearest-neighbour while `fine` is
+     downscaling and must not have it. */
+  @container (width < 640px) { .n640 img { image-rendering: auto; } }
+  @container (width < 320px) { .n320 img { image-rendering: auto; } }
+  .panel { display: none; }
+  .meta { margin-top: 10px; font-size: 13px; color: var(--dim); min-height: 3em; }
+  .meta b { color: var(--ink); font-weight: 600; }
+
+  /* CSS-only switcher: only the checked panel is displayed, and the hidden
+     images are lazy so the browser never decodes four animations at once. */
+  #r1:checked ~ .panels #p1,
+  #r2:checked ~ .panels #p2,
+  #r3:checked ~ .panels #p3,
+  #r4:checked ~ .panels #p4 { display: block; }
+  #r1:checked ~ .tabs label[for=r1],
+  #r2:checked ~ .tabs label[for=r2],
+  #r3:checked ~ .tabs label[for=r3],
+  #r4:checked ~ .tabs label[for=r4] { background: var(--ink); color: #1e2878; border-color: transparent; }
+  #r1:checked ~ .tabs label[for=r1] small,
+  #r2:checked ~ .tabs label[for=r2] small,
+  #r3:checked ~ .tabs label[for=r3] small,
+  #r4:checked ~ .tabs label[for=r4] small { color: #1e287899; }
+</style>
+</head>
+<body>
+
+<input type="radio" name="s" id="r1" checked>
+<input type="radio" name="s" id="r2">
+<input type="radio" name="s" id="r3">
+<input type="radio" name="s" id="r4">
+
+<h1>pixel-sea · styles in motion</h1>
+<p class="sub">20 s seamless loop · 12 fps · click a style to switch</p>
+
+<div class="tabs">
+  <label for="r1">retro <small>320×180 · 64 col · 4.3 MB</small></label>
+  <label for="r2">retro16 <small>320×180 · 16 col · 2.7 MB</small></label>
+  <label for="r3">fine <small>640×360 · 96 col · 15 MB</small></label>
+  <label for="r4">chunky <small>320×180 · 24-bit · 16 MB</small></label>
+</div>
+
+<div class="panels">
+  <div class="panel" id="p1">
+    <div class="stage n320"><img src="../sea_dusk_retro.png" alt="retro style loop"></div>
+    <p class="meta"><b>The one to ship.</b> 64 colours cut from the render itself by median cut. Dither is visible as texture without speckling. Watch the cumulus in the water near the horizon, and the glitter road narrowing to a point under the sun.</p>
+  </div>
+  <div class="panel" id="p2">
+    <div class="stage n320"><img src="../sea_dusk_retro16.png" alt="retro16 style loop" loading="lazy"></div>
+    <p class="meta"><b>Hard retro.</b> Same sea, 16 colours. Heavy banding in the sky and much coarser dither, the deliberately old-hardware look. Cheapest file of the four.</p>
+  </div>
+  <div class="panel" id="p3">
+    <div class="stage n640"><img src="../sea_dusk_fine.png" alt="fine style loop" loading="lazy"></div>
+    <p class="meta"><b>Highest fidelity.</b> 640×360 at 96 colours. Wave detail survives much further toward the horizon because each pixel row covers less sea. Nearly 4× the bytes of retro.</p>
+  </div>
+  <div class="panel" id="p4">
+    <div class="stage n320"><img src="../sea_dusk_chunky.png" alt="chunky style loop" loading="lazy"></div>
+    <p class="meta"><b>Reference, not a shipping option.</b> Full 24-bit, no palette, no dither. Useful for judging whether the palette is losing anything. Mostly it is not, at 4× the size.</p>
+  </div>
+</div>
+
+</body>
+</html>

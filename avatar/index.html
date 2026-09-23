@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pixel-sea · avatars</title>
+<style>
+  :root { --ink: #f0e4dc; --dim: #9fa8c0; --edge: #ffffff26; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: #0b0f1c;
+    color: var(--ink);
+    font: 15px/1.55 ui-monospace, "JetBrains Mono", Menlo, monospace;
+    padding: 30px clamp(16px, 4vw, 52px) 70px;
+  }
+  header { margin-bottom: 22px; }
+  h1 { font-size: 20px; margin: 0 0 4px; letter-spacing: .02em; }
+  h2 { font-size: 15px; margin: 44px 0 10px; font-weight: 600; }
+  p.sub { margin: 0; color: var(--dim); font-size: 13px; }
+  a { color: var(--ink); }
+
+  /* Eleven 512px stills is about 794 KB and no animation decode, so unlike
+     demo/themes.html this page can show the whole set at once. Comparing is
+     the only reason to open it. */
+  .grid {
+    display: grid; gap: 18px; margin-top: 20px;
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1100px;
+  }
+  /* Three bands, not two. Any fixed column count shrinks the cards as the
+     viewport crosses a breakpoint upward, and with a single jump at 640 the
+     drop was 285px to 134px, so a tablet in portrait showed these smaller
+     than a phone did. The middle band cuts that step to 264px to 194px. */
+  @media (max-width: 900px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 640px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  .card { text-align: center; }
+  /* No image-rendering: pixelated here, unlike the demo pages, which set it
+     only while the stage is at or above the render's native width and drop it
+     below. This page is below at every breakpoint, scaling a 512 still down to
+     about 261, and nearest-neighbour on a downscale samples the 4px dither
+     cell every 2.045 pixels instead of averaging it. That beats into roughly
+     22px moire blocks across the sky, which carries no detail but dither.
+     There is no width here worth gating on, so leave the browser to
+     box-filter unconditionally. */
+  .card img {
+    display: block; width: 100%; height: auto;
+    border: 1px solid var(--edge);
+    border-radius: 50%;
+    transition: border-radius .15s;
+  }
+  .card .name { margin-top: 8px; font-size: 13px; }
+  .card .meta { color: var(--dim); font-size: 12px; }
+
+  /* GitHub crops avatars round, repo READMEs do not. One checkbox flips the
+     whole set so you can judge both without rebaking anything. */
+  #square { position: absolute; opacity: 0; pointer-events: none; }
+  #square:checked ~ .grid .card img { border-radius: 6px; }
+  .toggle {
+    display: inline-block; cursor: pointer; user-select: none;
+    padding: 7px 15px; border-radius: 999px; margin-top: 18px;
+    border: 1px solid var(--edge); background: #ffffff0d; font-size: 13px;
+  }
+  .toggle:hover { background: #ffffff1c; }
+  #square:checked ~ .toggle { background: var(--ink); color: #0b0f1c; border-color: transparent; }
+
+  table { border-collapse: collapse; font-size: 13px; margin-top: 4px; }
+  th, td { text-align: left; padding: 5px 18px 5px 0; border-bottom: 1px solid var(--edge); }
+  th { color: var(--dim); font-weight: 400; }
+  td.n { text-align: right; font-variant-numeric: tabular-nums; }
+  .note { color: var(--dim); font-size: 13px; max-width: 70ch; }
+  .note b { color: var(--ink); font-weight: 600; }
+  code { background: #ffffff14; padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>pixel-sea · avatars</h1>
+  <p class="sub">512×512 stills · one frame each · click through for the 1024 version</p>
+</header>
+
+<input type="checkbox" id="square">
+<label class="toggle" for="square">show square crop</label>
+
+<div class="grid">
+  <div class="card"><a href="hi_dusk.png"><img src="avatar_dusk.png" alt="dusk avatar still"></a>
+    <div class="name">dusk</div><div class="meta">67 KB</div></div>
+  <div class="card"><a href="hi_dawn.png"><img src="avatar_dawn.png" alt="dawn avatar still"></a>
+    <div class="name">dawn</div><div class="meta">67 KB</div></div>
+  <div class="card"><a href="hi_storm.png"><img src="avatar_storm.png" alt="storm avatar still"></a>
+    <div class="name">storm</div><div class="meta">79 KB</div></div>
+  <div class="card"><a href="hi_tropical.png"><img src="avatar_tropical.png" alt="tropical avatar still"></a>
+    <div class="name">tropical</div><div class="meta">65 KB</div></div>
+  <div class="card"><a href="hi_night.png"><img src="avatar_night.png" alt="night avatar still"></a>
+    <div class="name">night</div><div class="meta">76 KB</div></div>
+  <div class="card"><a href="hi_ember.png"><img src="avatar_ember.png" alt="ember avatar still"></a>
+    <div class="name">ember</div><div class="meta">77 KB</div></div>
+  <div class="card"><a href="hi_arctic.png"><img src="avatar_arctic.png" alt="arctic avatar still"></a>
+    <div class="name">arctic</div><div class="meta">73 KB</div></div>
+  <div class="card"><a href="hi_mist.png"><img src="avatar_mist.png" alt="mist avatar still"></a>
+    <div class="name">mist</div><div class="meta">80 KB</div></div>
+  <div class="card"><a href="hi_noon.png"><img src="avatar_noon.png" alt="noon avatar still"></a>
+    <div class="name">noon</div><div class="meta">72 KB</div></div>
+  <div class="card"><a href="hi_gloaming.png"><img src="avatar_gloaming.png" alt="gloaming avatar still"></a>
+    <div class="name">gloaming</div><div class="meta">48 KB</div></div>
+  <div class="card"><a href="hi_trough.png"><img src="avatar_trough.png" alt="trough avatar still"></a>
+    <div class="name">trough</div><div class="meta">90 KB</div></div>
+</div>
+
+<p class="note" style="margin-top:26px">
+<b>Why stills.</b> A GitHub avatar will not animate. The upload keeps one frame
+whatever you feed it, so the frame is chosen here with <code>--at</code> rather
+than by GitHub. The 1 MB avatar limit never binds: the largest of these is 90 KB.
+Compose for the circle, since that is what the site renders.
+</p>
+
+<h2>The animated set</h2>
+<p class="note">
+These are for a profile README (<code>&lt;user&gt;/&lt;user&gt;</code>), a repo
+README, or an issue comment, where animation does play. 200×200, 32 colours,
+8 s at 10 fps, each deliberately under 1 MB. They are not embedded on this page
+because eleven decoding at once will spin a laptop's fans. See
+<a href="../demo/themes.html">demo/themes.html</a> for these in motion.
+</p>
+<table>
+  <tr><th>theme</th><th>size</th><th>headroom under 1 MB</th></tr>
+  <tr><td><a href="anim_gloaming_sub1mb.png">gloaming</a></td><td class="n">435 KB</td><td class="n">589 KB</td></tr>
+  <tr><td><a href="anim_arctic_sub1mb.png">arctic</a></td><td class="n">713 KB</td><td class="n">311 KB</td></tr>
+  <tr><td><a href="anim_mist_sub1mb.png">mist</a></td><td class="n">731 KB</td><td class="n">293 KB</td></tr>
+  <tr><td><a href="anim_dawn_sub1mb.png">dawn</a></td><td class="n">757 KB</td><td class="n">267 KB</td></tr>
+  <tr><td><a href="anim_night_sub1mb.png">night</a></td><td class="n">775 KB</td><td class="n">249 KB</td></tr>
+  <tr><td><a href="anim_dusk_sub1mb.png">dusk</a></td><td class="n">808 KB</td><td class="n">216 KB</td></tr>
+  <tr><td><a href="anim_tropical_sub1mb.png">tropical</a></td><td class="n">816 KB</td><td class="n">208 KB</td></tr>
+  <tr><td><a href="anim_noon_sub1mb.png">noon</a></td><td class="n">825 KB</td><td class="n">199 KB</td></tr>
+  <tr><td><a href="anim_trough_sub1mb.png">trough</a></td><td class="n">846 KB</td><td class="n">178 KB</td></tr>
+  <tr><td><a href="anim_ember_sub1mb.png">ember</a></td><td class="n">884 KB</td><td class="n">140 KB</td></tr>
+  <tr><td><a href="anim_storm_sub1mb.png">storm</a></td><td class="n">934 KB</td><td class="n">90 KB</td></tr>
+</table>
+<p class="note" style="margin-top:14px">
+Storm is the tightest of the eleven, because heavy cloud and constant whitecaps
+are the least compressible thing this renderer makes. If it gains detail it is
+the first file to break the ceiling, and dropping it to 7 s buys back about
+115 KB. Gloaming is the far end of the same axis at 435 KB, half of storm, and
+the gap is noise rather than subject: calm water, almost no whitecaps and a
+star field a tenth of night's leave far less per pixel that will not compress.
+</p>
+
+</body>
+</html>

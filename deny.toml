@@ -1,0 +1,20 @@
+# cargo-deny policy, checked by `cargo deny check` in CI.
+#
+# The dependency graph is `png` and its transitive deps, eleven crates, all
+# permissive. Every one of them offers MIT or Apache-2.0, so those two cover
+# the tree exactly and the allow-list stays trimmed to what is encountered.
+# pixel-sea itself is Apache-2.0 and is checked like any other crate.
+#
+# `simd-adler32` is the one crate that is MIT only, with no Apache alternative
+# to fall back on, so removing MIT from this list breaks the check rather than
+# tightening anything.
+#
+# advisories / bans / sources pass on cargo-deny's defaults here, so only the
+# licenses policy is specified.
+
+[licenses]
+allow = [
+    "Apache-2.0",
+    "MIT",
+]
+confidence-threshold = 0.8

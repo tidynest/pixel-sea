@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pixel-sea · themes</title>
+<style>
+  :root { --ink: #f0e4dc; --dim: #9fa8c0; --edge: #ffffff26; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: #0b0f1c;
+    color: var(--ink);
+    font: 15px/1.55 ui-monospace, "JetBrains Mono", Menlo, monospace;
+    padding: 30px clamp(16px, 4vw, 52px) 70px;
+  }
+  header { margin-bottom: 22px; }
+  h1 { font-size: 20px; margin: 0 0 4px; letter-spacing: .02em; }
+  p.sub { margin: 0; color: var(--dim); font-size: 13px; }
+
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 16px; }
+  input[type=radio] { position: absolute; opacity: 0; pointer-events: none; }
+  label {
+    cursor: pointer; padding: 7px 15px; border-radius: 999px;
+    border: 1px solid var(--edge); background: #ffffff0d;
+    font-size: 13px; user-select: none; transition: background .12s;
+  }
+  label:hover { background: #ffffff1c; }
+
+  /* The stage is a query container so the rule below can ask how wide the
+     render is actually being drawn, rather than deriving it from the viewport
+     and the body padding and getting it wrong when either changes. */
+  .stage {
+    container-type: inline-size;
+    border: 1px solid var(--edge); border-radius: 10px; overflow: hidden; background: #05070f;
+  }
+  .stage img { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+
+  /* Nearest-neighbour is for stretching a render up. Below its native 640 the
+     stage is squeezing it down instead, and nearest-neighbour then throws away
+     source pixels rather than averaging them, which beats against the 4px
+     Bayer cell into moire blocks across the sky. Hand it back to the browser's
+     filter. The crossover is a 640px stage, measured at a 698px viewport with
+     today's padding, so every phone and small tablet is below it. */
+  @container (width < 640px) {
+    .stage img { image-rendering: auto; }
+  }
+  .panel { display: none; }
+  .blurb { margin: 12px 0 0; font-size: 13px; color: var(--dim); max-width: 70ch; }
+  .blurb b { color: var(--ink); font-weight: 600; }
+  code { background: #ffffff14; padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+
+  /* CSS-only switcher. The hidden panels are lazy, so the browser decodes one
+     animation rather than eleven. Eleven at once will spin a laptop's fans. */
+  #t1:checked ~ .panels #p1, #t2:checked ~ .panels #p2,
+  #t3:checked ~ .panels #p3, #t4:checked ~ .panels #p4,
+  #t5:checked ~ .panels #p5, #t6:checked ~ .panels #p6,
+  #t7:checked ~ .panels #p7, #t8:checked ~ .panels #p8,
+  #t9:checked ~ .panels #p9, #t10:checked ~ .panels #p10,
+  #t11:checked ~ .panels #p11 { display: block; }
+  #t1:checked ~ .tabs label[for=t1], #t2:checked ~ .tabs label[for=t2],
+  #t3:checked ~ .tabs label[for=t3], #t4:checked ~ .tabs label[for=t4],
+  #t5:checked ~ .tabs label[for=t5], #t6:checked ~ .tabs label[for=t6],
+  #t7:checked ~ .tabs label[for=t7], #t8:checked ~ .tabs label[for=t8],
+  #t9:checked ~ .tabs label[for=t9],
+  #t10:checked ~ .tabs label[for=t10],
+  #t11:checked ~ .tabs label[for=t11] { background: var(--ink); color: #0b0f1c; border-color: transparent; }
+</style>
+</head>
+<body>
+
+<input type="radio" name="th" id="t1" checked>
+<input type="radio" name="th" id="t2">
+<input type="radio" name="th" id="t3">
+<input type="radio" name="th" id="t4">
+<input type="radio" name="th" id="t5">
+<input type="radio" name="th" id="t6">
+<input type="radio" name="th" id="t7">
+<input type="radio" name="th" id="t8">
+<input type="radio" name="th" id="t9">
+<input type="radio" name="th" id="t10">
+<input type="radio" name="th" id="t11">
+
+<header>
+  <h1>pixel-sea · themes</h1>
+  <p class="sub">640×360 · 96 colours · 20 s seamless loop · same renderer, eleven data tables</p>
+</header>
+
+<div class="tabs">
+  <label for="t1">dusk</label>
+  <label for="t2">dawn</label>
+  <label for="t3">storm</label>
+  <label for="t4">tropical</label>
+  <label for="t5">night</label>
+  <label for="t6">ember</label>
+  <label for="t7">arctic</label>
+  <label for="t8">mist</label>
+  <label for="t9">noon</label>
+  <label for="t10">gloaming</label>
+  <label for="t11">trough</label>
+</div>
+
+<div class="panels">
+  <div class="panel" id="p1">
+    <div class="stage"><img src="../sea_dusk_fine.png" alt="dusk theme loop"></div>
+    <p class="blurb"><b>dusk.</b> Low sun, violet sky, warm cumulus over deep blue water. The clouds are visible in the water near the horizon; that reflection is the same function the sky uses, pointed along the mirrored ray.</p>
+  </div>
+  <div class="panel" id="p2">
+    <div class="stage"><img src="../sea_dawn_fine.png" alt="dawn theme loop" loading="lazy"></div>
+    <p class="blurb"><b>dawn.</b> Cold light just after sunrise with the last stars still out. At <code>time_scale 0.26</code> the sea is quiet but not flat, so the low sun has ripples to catch. <code>arctic</code> is the calmest of the set now, at 0.18.</p>
+  </div>
+  <div class="panel" id="p3">
+    <div class="stage"><img src="../sea_storm_fine.png" alt="storm theme loop" loading="lazy"></div>
+    <p class="blurb"><b>storm.</b> Grey-green gale. The eye drops to 9 m so you sit down in it, the wave amplitudes roughly triple, and <code>foam_k 2.2</code> keeps whitecaps breaking constantly. Flat extinction coefficients grey the light instead of reddening it.</p>
+  </div>
+  <div class="panel" id="p4">
+    <div class="stage"><img src="../sea_tropical_fine.png" alt="tropical theme loop" loading="lazy"></div>
+    <p class="blurb"><b>tropical.</b> Bright daylight, turquoise shallows, white cumulus. The sun sits about 10° up, low enough to lay a glitter path on the water while Fresnel still keeps the water's own colour carrying the frame.</p>
+  </div>
+  <div class="panel" id="p5">
+    <div class="stage"><img src="../sea_night_fine.png" alt="night theme loop" loading="lazy"></div>
+    <p class="blurb"><b>night.</b> Moon low over black water, silver road, full star field. The moon is the same light source at <code>intensity 3.2</code> with a cool tint and a fifth of the angular radius.</p>
+  </div>
+  <div class="panel" id="p6">
+    <div class="stage"><img src="../sea_ember_fine.png" alt="ember theme loop" loading="lazy"></div>
+    <p class="blurb"><b>ember.</b> Sun on the horizon through heavy dust. The red comes from <code>airmass_k [0.10, 0.42, 0.95]</code>, which scatters blue and green out of the beam. It is not a picked orange.</p>
+  </div>
+  <div class="panel" id="p7">
+    <div class="stage"><img src="../sea_arctic_fine.png" alt="arctic theme loop" loading="lazy"></div>
+    <p class="blurb"><b>arctic.</b> Cold low sun on flat calm, seen from 20 m up. Ice-blue water under an open sky, and the widest-feeling of the set because the high eye pushes the horizon far out.</p>
+  </div>
+  <div class="panel" id="p8">
+    <div class="stage"><img src="../sea_mist_fine.png" alt="mist theme loop" loading="lazy"></div>
+    <p class="blurb"><b>mist.</b> Cold sea haar with the sun buried in it. The grey is not painted on: <code>airmass_k [0.30, 0.33, 0.38]</code> is nearly flat, so <code>extinction()</code> greys the light instead of reddening it the way <code>ember</code> does. <code>haze_k 0.55</code> is the highest in the set and piles the rest onto the water line.</p>
+  </div>
+  <div class="panel" id="p9">
+    <div class="stage"><img src="../sea_noon_fine.png" alt="noon theme loop" loading="lazy"></div>
+    <p class="blurb"><b>noon.</b> Sun high and hard over open ocean. At <code>elev 0.330</code> it is the only theme with the light above ten degrees, which puts <code>extinction()</code> at airmass 2.2 against <code>tropical</code>'s 3.5, so the disc comes out white without a colour being picked for it. The glitter road broadens toward the viewer instead of pinching to a point at the horizon, which is what every low-sun theme in the set does.</p>
+  </div>
+  <div class="panel" id="p10">
+    <div class="stage"><img src="../sea_gloaming_fine.png" alt="gloaming theme loop" loading="lazy"></div>
+    <p class="blurb"><b>gloaming.</b> The sun is a few minutes down. <code>elev -0.055</code> puts it below the horizon row, so the disc is never drawn and the aureole is the only part of the light left, which is why the warm smear sits on the water line instead of above it. It is the floor of the same relation <code>noon</code> tests the ceiling of. At 9.45 MiB it is also the lightest loop in the set by four megabytes, because calm water and a star field a tenth of <code>night</code>'s leave little per-pixel noise for deflate to choke on.</p>
+  </div>
+  <div class="panel" id="p11">
+    <div class="stage"><img src="../sea_trough_fine.png" alt="trough theme loop" loading="lazy"></div>
+    <p class="blurb"><b>trough.</b> The lowest eye in the set at 4 m, against <code>arctic</code>'s 20. That is a distance knob and nothing more, since <code>render()</code> takes z from the row on flat water, so no crest can occlude anything behind it. What it does is bring the horizon in to 1440 m from 7200, which magnifies whatever the spectrum holds. The wavelengths here are about a third of <code>dusk</code>'s to match: written with an ordinary 70 m swell it rendered as a sheet of glass, because from 4 m up a 12 m wave spans most of the frame.</p>
+  </div>
+</div>
+
+</body>
+</html>

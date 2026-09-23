@@ -1,0 +1,14 @@
+[package]
+name = "pixel-sea"
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+# Not published to crates.io. The licence is declared regardless, so cargo-deny
+# checks it like any other crate in the graph rather than skipping it.
+publish = false
+
+[dependencies]
+png = "0.17"
+
+[profile.release]
+opt-level = 3
